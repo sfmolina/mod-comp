@@ -45,7 +45,7 @@ Este proyecto implementa y visualiza diversos modelos computacionales, con espec
 - Representación visual de fronteras de decisión
 - Soporte para diferentes funciones de activación
 
-### 🚀 Future Plans
+### 🚀 Planes Futuros
 - Soporte para carga de archivos CSV con conjuntos de datos personalizados
 - ADALINE (ADAptive LInear NEuron)
 - ELM (Extreme Learning Machine)
