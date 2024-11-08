@@ -1,0 +1,54 @@
+$highlighted-color: #feb048;
+$color1: #4820b6;
+$color2: #dd4340;
+
+.navbar {
+
+    .navbar-brand {
+      font-weight: bold;
+      padding: 5px 19px;
+      margin-right: 3px;
+      transition: color 0.3s ease;
+      color: black;
+      @media (max-width: 991px) {
+          font-size: 1.8rem;
+      }
+  
+      &:hover, &.active, &:active, &:focus {
+          color: $highlighted-color;
+      }
+    }
+  
+}
+
+.echart-demo {
+    height: 100vh;
+    background: black;
+}
+
+.ps-comp {
+    height: 100vh;
+}
+
+.top-buttons {
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+.ps-info {
+    padding-bottom: 50px;
+}
+
+#ps-chart {
+
+    margin-top: -30px;
+    margin-bottom: 20px;
+
+    width: 900px;
+    height: 450px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: auto;
+    }
+}
