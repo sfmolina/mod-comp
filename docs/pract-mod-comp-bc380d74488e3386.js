@@ -1,4 +1,4 @@
-import { ps_chart } from './snippets/mod-comp-679ed0227e0e870a/inline0.js';
+import { ps_chart } from './snippets/pract-mod-comp-a5cda389088c9207/inline0.js';
 
 let wasm;
 
@@ -331,7 +331,7 @@ function __wbg_get_imports() {
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
-    imports.wbg.__wbg_pschart_991629547cfbe540 = function(arg0, arg1) {
+    imports.wbg.__wbg_pschart_81284a69418f6b87 = function(arg0, arg1) {
         ps_chart(takeObject(arg0), takeObject(arg1));
     };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
@@ -961,7 +961,7 @@ async function __wbg_init(module_or_path) {
     }
 
     if (typeof module_or_path === 'undefined') {
-        module_or_path = new URL('mod-comp_bg.wasm', import.meta.url);
+        module_or_path = new URL('pract-mod-comp_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
