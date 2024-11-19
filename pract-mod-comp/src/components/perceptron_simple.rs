@@ -304,7 +304,7 @@ fn ps_calculate(props: &PsProps) -> Html {
                                 </thead>
                                 <tbody>
                                     { for data.row_iter().map(|row| html! {
-                                        <tr>
+                                        <tr> 
                                             { for row.iter().map(|&val| html! { <td>{ val }</td> }) }
                                         </tr>
                                     }) }
