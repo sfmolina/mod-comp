@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------//
 //  AUTHOR:    @sfmolina                                            //
 //  Version:   v1                                                  //
-//  Modified:  08no24                                             //
+//  Modified:  19no24                                             //
 //---------------------------------------------------------------//
 
 
@@ -167,13 +167,14 @@ pub fn perceptron_simple_component() -> Html {
 
     html! {
         <div class="container-fluid ps-comp">
-            <div class="d-flex justify-content-center mb-3 top-buttons">
-                <button class="btn btn-primary mx-1" onclick={on_click(Problem::And)}>{ "AND" }</button>
-                <button class="btn btn-primary mx-1" onclick={on_click(Problem::Or)}>{ "OR" }</button>
-                <button class="btn btn-primary mx-1" onclick={on_click(Problem::Xor)}>{ "XOR" }</button>
-                <button class="btn btn-primary mx-1" onclick={on_click(Problem::L5)}>{ "L5" }</button>
-                <button class="btn btn-primary mx-1" onclick={on_click(Problem::L10)}>{ "L10" }</button>
-                <button class="btn btn-primary mx-1" onclick={on_click(Problem::L50)}>{ "L50" }</button>
+            <div class="container d-flex justify-content-center mb-3 top-buttons">
+                <h2>{ "Dataset:" }</h2>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::And)}>{ "AND" }</button>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::Or)}>{ "OR" }</button>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::Xor)}>{ "XOR" }</button>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::L5)}>{ "L5" }</button>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::L10)}>{ "L10" }</button>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::L50)}>{ "L50" }</button>
             </div>
             <PerceptronSimpleCalculation problem={*problem} />
         </div>
@@ -229,35 +230,92 @@ fn ps_calculate(props: &PsProps) -> Html {
     html! {
         
         <div class="container ps-info">
-            <div class="container d-flex flex-column align-items-center mb-3">
-                <h1>{ format!("Simple Perceptron Results ({})", props.problem) }</h1>
-                <div id="ps-chart"></div>
-                <p>{"All calculations and the perceptron process are computed on the page, and nothing has been precomputed. The chart shows the history of weight changes. Reloading the page or changing the dataset will trigger recalculation."}</p>
+
+            <div class="row">
+                <div class="col">
+                
+                    <div class="container d-flex flex-column align-items-center mb-3">
+                        <h1>{ format!("Simple Perceptron Results ({})", props.problem) }</h1>
+                        <div id="ps-chart"></div>
+
+                        <div class="disclaimer">
+                            <p>{"*All calculations and the perceptron process are "}<b>{"computed on the page, nothing has been precomputed."}</b>{" The chart shows the history of weight changes. Reloading the page or changing the dataset will trigger recalculation."}</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <h2>{ "Classification Result" }</h2>
-            <p>{ if all_correct { format!("All data classified correctly in {} epochs.", last_epoch) } 
-                 else { format!("Some data misclassified. Total epochs: {}.", last_epoch) } }</p>
-            <h2>{ "Weights" }</h2>
-            <ul>
-                { for final_weights.iter().map(|&weight| html! { <li>{ weight }</li> }) }
-            </ul>
-            <h2>{ "Data" }</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        { for (0..data.ncols()).map(|i| html! { <th>{ 
-                            if i == data.ncols() - 1 { "Target".to_string() } else { format!("Input {}", i) }
-                        }</th> }) }
-                    </tr>
-                </thead>
-                <tbody>
-                    { for data.row_iter().map(|row| html! {
-                        <tr>
-                            { for row.iter().map(|&val| html! { <td>{ val }</td> }) }
-                        </tr>
-                    }) }
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col">
+                    <div class="container content">
+
+                        {
+                            if all_correct {
+                                html! {
+                                    <>
+                                    <h2>{ "Classification Result ✅" }</h2>
+                                    <ul><li>
+                                        <p>{ format!("All data classified correctly in {} epochs.", last_epoch) }</p> 
+                                    </li></ul>
+                                    </>
+                                }
+                            } else {
+                                html! {
+                                    <>
+                                    <h2>{ "Classification Result ❌" }</h2>
+                                    <ul><li>
+                                        <p>{ format!("Some data misclassified after {} epochs.", last_epoch) }</p> 
+                                    </li></ul>
+                                    </>
+                                }
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="container content">
+
+                        <h2>{ "Weights" }</h2>
+                        <ul>
+                            { for final_weights.iter().map(|&weight| html! { <li>{ weight }</li> }) }
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="container content">
+
+                        <h2>{ "Data" }</h2>
+                        <div class="dataset-info">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        { for (0..data.ncols()).map(|i| html! { <th>{ 
+                                            if i == data.ncols() - 1 { "Target".to_string() } else { format!("Input {}", i) }
+                                        }</th> }) }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { for data.row_iter().map(|row| html! {
+                                        <tr>
+                                            { for row.iter().map(|&val| html! { <td>{ val }</td> }) }
+                                        </tr>
+                                    }) }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
         
     }
@@ -272,6 +330,7 @@ fn ps_calculate(props: &PsProps) -> Html {
 #[wasm_bindgen(inline_js = "
 
 // Función para calcular los puntos de la recta
+
 function calcularRecta(W, limites) {
     const [xMin, xMax] = limites;
     const xVals = [xMin, xMax];
@@ -280,73 +339,101 @@ function calcularRecta(W, limites) {
 }
 
 export function ps_chart(dataPoints, weights) {
-    const limites = [-1.0, 2.5]; // Limites del eje X
+    const limites = [-1.0, 2.0]; // Limites del eje X
 
     // Filtrar los puntos en función de su tipo
     const positivePoints = dataPoints.filter(point => point[2] === 1).map(point => [point[0], point[1]]);
     const negativePoints = dataPoints.filter(point => point[2] === -1).map(point => [point[0], point[1]]);
 
-    // Configuración de la gráfica en ECharts
-    const option = {
-        timeline: {
-            axisType: 'category',
-            autoPlay: false,
-            playInterval: 1500,
-            data: weights.map(() => ''), // Genera entradas vacías para cada conjunto de pesos
-            tooltip: {
-                formatter: function(params) {
-                    return `Configuración de pesos ${params.dataIndex + 1}`;
-                }
-            }
-        },
-        options: weights.map((W, index) => ({
-            title: {
-                left: 'center'
-            },
-            xAxis: {
-                type: 'value',
-                min: limites[0],
-                max: limites[1]
-            },
-            yAxis: {
-                type: 'value',
-                min: limites[0],
-                max: limites[1]
-            },
-            series: [
-                {
-                    type: 'scatter',
-                    data: positivePoints, // Puntos de tipo 1
-                    symbolSize: 10,
-                    name: 'Tipo 1',
-                    itemStyle: {
-                        color: '#4820b6' // Color para el tipo 1
-                    }
-                },
-                {
-                    type: 'scatter',
-                    data: negativePoints, // Puntos de tipo -1
-                    symbolSize: 10,
-                    name: 'Tipo -1',
-                    itemStyle: {
-                        color: '#dd4340' // Color para el tipo -1
-                    }
-                },
-                {
-                    type: 'line',
-                    data: calcularRecta(W, limites), // La recta cambia en cada paso
-                    lineStyle: {
-                        width: 2
-                    },
-                    name: 'Recta'
-                }
-            ]
-        }))
-    };
+    // Cargar el tema
+    fetch('public/themes/roma.json')
+        .then(response => response.json())
+        .then(theme => {
+            echarts.registerTheme('custom_theme', theme);
 
-    // Inicializar el gráfico
-    const chart = echarts.init(document.getElementById('ps-chart'));
-    chart.setOption(option);
+            // Configuración de la gráfica en ECharts
+            const option = {
+                color: theme.color, // Establecer la paleta de colores global
+                timeline: {
+                    axisType: 'category',
+                    autoPlay: false,
+                    playInterval: 1500,
+                    data: weights.map(() => ''),
+                    tooltip: {
+                        formatter: function(params) {
+                            return `Configuración de pesos ${params.dataIndex + 1}`;
+                        }
+                    },
+                    lineStyle: theme.timeline.lineStyle,
+                    itemStyle: theme.timeline.itemStyle,
+                    progress: {
+                        lineStyle: theme.timeline.lineStyle,
+                        itemStyle: theme.timeline.itemStyle
+                    },
+                    controlStyle: theme.timeline.controlStyle,
+                    checkpointStyle: theme.timeline.checkpointStyle,
+                    label: theme.timeline.label
+                },
+                options: weights.map((W, index) => ({
+                    title: {
+                        left: 'center'
+                    },
+                    xAxis: {
+                        type: 'value',
+                        min: limites[0],
+                        max: limites[1]
+                    },
+                    yAxis: {
+                        type: 'value',
+                        min: limites[0],
+                        max: limites[1]
+                    },
+                    series: [
+                        {
+                            type: 'scatter',
+                            data: positivePoints,
+                            symbolSize: 10,
+                            name: 'Tipo 1',
+                            itemStyle: {
+                                color: theme.color[12]
+                            }
+                        },
+                        {
+                            type: 'scatter',
+                            data: negativePoints,
+                            symbolSize: 10,
+                            name: 'Tipo -1',
+                            itemStyle: {
+                                color: theme.color[11]
+                            }
+                        },
+                        {
+                            type: 'line',
+                            data: calcularRecta(W, limites),
+                            name: 'Recta',
+                            itemStyle: {
+                                color: theme.color[5] // Color para los puntos de la línea
+                            },
+                            lineStyle: theme.line.lineStyle,
+                            emphasis: {
+                                lineStyle: {
+                                    color: theme.color[5] // Mantener el color al hacer hover
+                                },
+                                itemStyle: {
+                                    color: theme.color[5] // Mantener el color al hacer hover
+                                }
+                            }
+                        }
+                    ]
+                }))
+            };
+
+            const chart = echarts.init(document.getElementById('ps-chart'), 'custom_theme');
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
+            chart.setOption(option);
+        });
 }
 ")]
 extern "C" {

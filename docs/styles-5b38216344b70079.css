@@ -1,0 +1,104 @@
+.bold {
+  font-weight: bold;
+}
+
+.navbar .navbar-brand {
+  font-weight: bold;
+  font-size: 1.6rem;
+  padding: 5px 19px;
+  margin-right: 3px;
+  transition: color 0.3s ease;
+  color: black;
+}
+@media (max-width: 991px) {
+  .navbar .navbar-brand {
+    font-size: 1.8rem;
+  }
+}
+.navbar .navbar-brand:hover, .navbar .navbar-brand.active, .navbar .navbar-brand:active, .navbar .navbar-brand:focus {
+  color: #feb048;
+}
+
+.ps-comp {
+  height: 100vh;
+}
+
+.top-buttons {
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
+.top-buttons .btn-primary.custom {
+  background-color: #e43c59;
+  border-color: #c23531;
+  border-width: 3px;
+  font-weight: bold;
+  border-radius: 10px;
+  min-width: 60px;
+}
+.top-buttons .btn-primary.custom:hover {
+  background-color: hsl(350, 76%, 46%);
+  border-color: hsl(350, 76%, 46%);
+}
+.top-buttons h2 {
+  font-weight: bold;
+  color: #333;
+  margin-right: 15px;
+}
+
+.ps-info {
+  padding-bottom: 50px;
+}
+.ps-info h1 {
+  font-size: 1.5rem;
+  margin-bottom: -45px;
+  font-weight: bold;
+  color: #333;
+  z-index: 2;
+}
+.ps-info #ps-chart {
+  z-index: 1;
+  background-color: #f0f0f0;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 550px;
+}
+@media (max-width: 768px) {
+  .ps-info #ps-chart {
+    width: 100%;
+    height: auto;
+  }
+}
+.ps-info .disclaimer {
+  width: 90%;
+  color: #333;
+}
+.ps-info .row {
+  margin-bottom: 50px;
+}
+.ps-info .content {
+  width: 100%;
+  color: #333;
+}
+.ps-info .content h2 {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.ps-info .content .dataset-info {
+  padding-top: 1px;
+  padding-bottom: 0px;
+  background-color: #f0f0f0 !important;
+  border-radius: 15px;
+}
+.ps-info .content .dataset-info table {
+  background-color: transparent;
+}
+.ps-info .content .dataset-info table th {
+  background-color: transparent;
+  text-align: center;
+}
+.ps-info .content .dataset-info table td {
+  background-color: transparent;
+  border: none;
+  text-align: center;
+}
