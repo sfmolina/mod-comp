@@ -102,3 +102,34 @@
   border: none;
   text-align: center;
 }
+
+.custom-file-input {
+  padding-right: 10px;
+  margin-left: 5px;
+  font-size: 16px;
+  color: #555;
+  background-color: #f0f0f0;
+  border: 2px solid #7cb342;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-input:hover {
+  background-color: #e0e0e0;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  padding: 9.5px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #7cb342;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-input::-webkit-file-upload-button:hover {
+  background-color: #45a049;
+}

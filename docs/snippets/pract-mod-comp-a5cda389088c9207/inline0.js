@@ -9,12 +9,42 @@ function calcularRecta(W, limites) {
     return xVals.map((x, i) => [x, yVals[i]]);
 }
 
-export function ps_chart(dataPoints, weights) {
-    const limites = [-1.0, 2.0]; // Limites del eje X
+function calcularLimites(allPoints) {
 
+    // Inicializar los límites con valores extremos
+    let minX = Infinity;
+    let maxX = -Infinity;
+
+    // Recorrer todos los puntos para encontrar los límites
+    allPoints.forEach(point => {
+        if (point[0] < minX) {
+            minX = point[0];
+        }
+        if (point[0] > maxX) {
+            maxX = point[0];
+        }
+    });
+
+    // Añadir un margen de 0.5 a los límites
+    minX -= 0.5;
+    maxX += 0.5;
+
+    // Redondear los límites al múltiplo más cercano de 0.5
+    minX = (Math.round(minX * 2) / 2).toFixed(1);
+    maxX = (Math.round(maxX * 2) / 2).toFixed(1);
+
+    return [minX, maxX];
+}
+
+export function ps_chart(dataPoints, weights) {
+
+    const limites = calcularLimites(dataPoints);
+
+    
     // Filtrar los puntos en función de su tipo
     const positivePoints = dataPoints.filter(point => point[2] === 1).map(point => [point[0], point[1]]);
     const negativePoints = dataPoints.filter(point => point[2] === -1).map(point => [point[0], point[1]]);
+
 
     // Cargar el tema
     fetch('public/themes/roma.json')
@@ -63,7 +93,7 @@ export function ps_chart(dataPoints, weights) {
                         {
                             type: 'scatter',
                             data: positivePoints,
-                            symbolSize: 10,
+                            symbolSize: 12,
                             name: 'Tipo 1',
                             itemStyle: {
                                 color: theme.color[12]
@@ -72,7 +102,7 @@ export function ps_chart(dataPoints, weights) {
                         {
                             type: 'scatter',
                             data: negativePoints,
-                            symbolSize: 10,
+                            symbolSize: 12,
                             name: 'Tipo -1',
                             itemStyle: {
                                 color: theme.color[11]

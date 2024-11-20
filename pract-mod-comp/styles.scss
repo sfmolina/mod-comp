@@ -1,6 +1,7 @@
 $highlighted-color: #feb048;
-$color1: #4820b6;
-$color2: #dd4340;
+$color1: #e43c59;
+$color1-darken: #c23531;
+$background-darken: #f0f0f0;
 $default-text-color: #333;
 
 .bold {
@@ -36,8 +37,8 @@ $default-text-color: #333;
     padding-bottom: 30px;
 
     .btn-primary.custom {
-        background-color: #e43c59;
-        border-color: #c23531;
+        background-color: $color1;
+        border-color: $color1-darken;
         border-width: 3px;
         font-weight: bold;
         border-radius: 10px;
@@ -74,7 +75,7 @@ $default-text-color: #333;
 
         z-index: 1;
     
-        background-color: #f0f0f0;
+        background-color: $background-darken;
     
         border-radius: 15px;
 
@@ -110,7 +111,7 @@ $default-text-color: #333;
         .dataset-info {
             padding-top: 1px;
             padding-bottom: 0px;
-            background-color: #f0f0f0 !important;
+            background-color: $background-darken !important;
             border-radius: 15px;
         
             table {
@@ -130,4 +131,36 @@ $default-text-color: #333;
         }
     }
 
+}
+
+
+.custom-file-input {
+    padding-right: 10px;
+    margin-left: 5px;
+    font-size: 16px;
+    color: #555;
+    background-color: $background-darken;
+    border: 2px solid #7cb342;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-input:hover {
+    background-color: #e0e0e0;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    padding: 9.5px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #7cb342;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-input::-webkit-file-upload-button:hover {
+    background-color: #45a049;
 }
