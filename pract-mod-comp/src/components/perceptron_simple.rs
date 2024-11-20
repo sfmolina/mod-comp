@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------//
 //  AUTHOR:    @sfmolina                                            //
 //  Version:   v1                                                  //
-//  Modified:  19no24                                             //
+//  Modified:  20no24                                             //
 //---------------------------------------------------------------//
 
 
@@ -9,9 +9,10 @@
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
-use crate::data::perceptron_simple::*;
 use nalgebra::{DMatrix, DVector};
 use rand::Rng;
+use crate::data::perceptron_simple::*;
+use crate::components::file_uploader::FileUpload;
 
 
 
@@ -24,12 +25,12 @@ type WeightsVector = DVector<f64>;
 type WeightsHistory = Vec<DVector<f64>>;
 type AllCorrect = bool;
 type LastEpoch = i32;
-fn main_ps(problem: &[[f64; 3]])
+fn main_ps(problem: DataMatrix)
 -> (DataMatrix, WeightsVector, WeightsHistory, AllCorrect, LastEpoch)
 {
     
     // Carga de datos en una matriz
-    let data = array_to_dmatrix(problem);
+    let data = problem;
 
     let lr: f64 = 0.5;          // Learning rate
     let max_epochs: i32 = 100;  // Número máximo de épocas
@@ -144,11 +145,18 @@ fn signo(x: f64) -> f64 {
 #[derive(Properties, PartialEq)]
 struct PsProps {
     problem: Problem,
+    file_data:Vec<Vec<f64>>,
+    force_update: usize,
 }
 
 
 #[function_component(PerceptronSimpleComponent)]
 pub fn perceptron_simple_component() -> Html {
+
+
+    // Estado para forzar la actualización
+    let force_update = use_state(|| 0_usize);
+
 
     // Estado para almacenar el problema seleccionado
     let problem = use_state(|| Problem::And);
@@ -162,8 +170,29 @@ pub fn perceptron_simple_component() -> Html {
     // Función para manejar el evento de clic
     let on_click = |new_problem| {
         let set_problem = set_problem.clone();
-        Callback::from(move |_| set_problem(new_problem))
+        let force_update = force_update.clone();
+        Callback::from(move |_| {
+            set_problem(new_problem);
+            force_update.set(*force_update + 1);
+        })
     };
+
+
+    //Para el file upload
+    let file_data = use_state(Vec::<Vec<f64>>::new);
+
+    let on_file_upload = {
+        let file_data = file_data.clone();
+        let set_problem = set_problem.clone();
+        let force_update = force_update.clone();
+        Callback::from(move |data: Vec<Vec<f64>>| {
+            file_data.set(data);
+            set_problem(Problem::Csv);
+            force_update.set(*force_update + 1);
+        })
+    };
+
+
 
     html! {
         <div class="container-fluid ps-comp">
@@ -175,8 +204,10 @@ pub fn perceptron_simple_component() -> Html {
                 <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::L5)}>{ "L5" }</button>
                 <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::L10)}>{ "L10" }</button>
                 <button class="btn btn-primary custom mx-1" onclick={on_click(Problem::L50)}>{ "L50" }</button>
+                <button class="btn btn-primary custom mx-1" onclick={on_click(*problem)}>{ "Reload" }</button>
+                <FileUpload on_file_upload={on_file_upload} />
             </div>
-            <PerceptronSimpleCalculation problem={*problem} />
+            <PerceptronSimpleCalculation problem={*problem} file_data={(*file_data).clone()} force_update={*force_update} />
         </div>
     }
 }
@@ -185,14 +216,53 @@ pub fn perceptron_simple_component() -> Html {
 #[function_component(PerceptronSimpleCalculation)]
 fn ps_calculate(props: &PsProps) -> Html {
 
+    let filas: usize;
+    let columnas: usize;
+
     // Seleccionar el problema
-    let problem: &[[f64; 3]] = match props.problem {
-        Problem::Xor => &XOR_DATA_ARRAY,
-        Problem::And => &AND_DATA_ARRAY,
-        Problem::Or => &OR_DATA_ARRAY,
-        Problem::L5 => &L5_DATA_ARRAY,
-        Problem::L10 => &L10_DATA_ARRAY,
-        Problem::L50 => &L50_DATA_ARRAY,
+    let problem: DMatrix<f64> = match props.problem {
+        Problem::And => {
+            let mat = and_problem();
+            filas = mat.nrows();
+            columnas = mat.ncols();
+            mat
+        },
+        Problem::Or => {
+            let mat = or_problem();
+            filas = mat.nrows();
+            columnas = mat.ncols();
+            mat
+        },
+        Problem::Xor => {
+            let mat = xor_problem();
+            filas = mat.nrows();
+            columnas = mat.ncols();
+            mat
+        },
+        Problem::L5 => {
+            let mat = l5_problem();
+            filas = mat.nrows();
+            columnas = mat.ncols();
+            mat
+        },
+        Problem::L10 => {
+            let mat = l10_problem();
+            filas = mat.nrows();
+            columnas = mat.ncols();
+            mat
+        },
+        Problem::L50 => {
+            let mat = l50_problem();
+            filas = mat.nrows();
+            columnas = mat.ncols();
+            mat
+        },
+        Problem::Csv => {
+            filas = props.file_data.len();
+            columnas = props.file_data[0].len();
+            let data = DMatrix::from_row_slice(filas, columnas, &props.file_data.iter().flatten().copied().collect::<Vec<f64>>());
+            data
+        }
     };
 
 
@@ -292,7 +362,7 @@ fn ps_calculate(props: &PsProps) -> Html {
                 <div class="col">
                     <div class="container content">
 
-                        <h2>{ "Data" }</h2>
+                        <h2>{ format!("Data ({}x{})", filas, columnas) }</h2>
                         <div class="dataset-info">
                             <table class="table table-striped">
                                 <thead>
@@ -338,12 +408,42 @@ function calcularRecta(W, limites) {
     return xVals.map((x, i) => [x, yVals[i]]);
 }
 
-export function ps_chart(dataPoints, weights) {
-    const limites = [-1.0, 2.0]; // Limites del eje X
+function calcularLimites(allPoints) {
 
+    // Inicializar los límites con valores extremos
+    let minX = Infinity;
+    let maxX = -Infinity;
+
+    // Recorrer todos los puntos para encontrar los límites
+    allPoints.forEach(point => {
+        if (point[0] < minX) {
+            minX = point[0];
+        }
+        if (point[0] > maxX) {
+            maxX = point[0];
+        }
+    });
+
+    // Añadir un margen de 0.5 a los límites
+    minX -= 0.5;
+    maxX += 0.5;
+
+    // Redondear los límites al múltiplo más cercano de 0.5
+    minX = (Math.round(minX * 2) / 2).toFixed(1);
+    maxX = (Math.round(maxX * 2) / 2).toFixed(1);
+
+    return [minX, maxX];
+}
+
+export function ps_chart(dataPoints, weights) {
+
+    const limites = calcularLimites(dataPoints);
+
+    
     // Filtrar los puntos en función de su tipo
     const positivePoints = dataPoints.filter(point => point[2] === 1).map(point => [point[0], point[1]]);
     const negativePoints = dataPoints.filter(point => point[2] === -1).map(point => [point[0], point[1]]);
+
 
     // Cargar el tema
     fetch('public/themes/roma.json')
@@ -392,7 +492,7 @@ export function ps_chart(dataPoints, weights) {
                         {
                             type: 'scatter',
                             data: positivePoints,
-                            symbolSize: 10,
+                            symbolSize: 12,
                             name: 'Tipo 1',
                             itemStyle: {
                                 color: theme.color[12]
@@ -401,7 +501,7 @@ export function ps_chart(dataPoints, weights) {
                         {
                             type: 'scatter',
                             data: negativePoints,
-                            symbolSize: 10,
+                            symbolSize: 12,
                             name: 'Tipo -1',
                             itemStyle: {
                                 color: theme.color[11]
