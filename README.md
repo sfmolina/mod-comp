@@ -18,7 +18,6 @@ This project implements and visualizes various computational models, with a spec
 - Real-time model training and prediction
 
 ### 🚀 Future Plans
-- CSV file upload support for custom datasets
 - ADALINE (ADAptive LInear NEuron)
 - ELM (Extreme Learning Machine)
 
@@ -41,12 +40,8 @@ Este proyecto implementa y visualiza diversos modelos computacionales, con espec
 ### ✨ Características
 - Visualización interactiva de modelos computacionales
 - Entrenamiento y predicción de modelos en tiempo real
-- Parámetros personalizables para algoritmos de aprendizaje
-- Representación visual de fronteras de decisión
-- Soporte para diferentes funciones de activación
 
 ### 🚀 Planes Futuros
-- Soporte para carga de archivos CSV con conjuntos de datos personalizados
 - ADALINE (ADAptive LInear NEuron)
 - ELM (Extreme Learning Machine)
 
